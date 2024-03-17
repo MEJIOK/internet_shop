@@ -51,3 +51,16 @@ class Product:
     def from_dict(cls, data):
         """Create a Product object from a dictionary."""
         return cls(data['name'], data['description'], data['price'], data['quantity'])
+
+    @classmethod
+    def create_product(cls, name, description, price, quantity, products_list):
+        """Create a new product or update existing one and return it."""
+        for product in products_list:
+            if product.name == name:
+                # Если товар с таким именем уже существует, обновляем его данные
+                product.price = max(product.price, price)  # Выбираем более высокую цену
+                product.quantity += quantity  # Увеличиваем количество в наличии
+                return product  # Возвращаем существующий товар
+
+        # Если товар с таким именем не найден, создаем новый товар
+        return cls(name, description, price, quantity)
