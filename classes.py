@@ -43,9 +43,29 @@ class Product:
         """Initialize a Product object with name, description, price, and quantity."""
         self.name = name
         self.description = description
-        self.price = price
+        self._price = price
         self.quantity = quantity
         Category.total_unique_products += 1
+
+    @property
+    def price(self):
+        """Getter for the price attribute."""
+        return self._price
+
+    @price.setter
+    def price(self, value):
+        """Setter for the price attribute."""
+        if value <= 0:
+            print("Ошибка: цена введена некорректно.")
+        elif value < self._price:
+            confirmation = input("Цена товара понижается. Вы уверены? (y/n): ")
+            if confirmation.lower() == 'y':
+                self._price = value
+                print("Цена товара успешно изменена.")
+            else:
+                print("Изменение цены отменено.")
+        else:
+            self._price = value
 
     @classmethod
     def from_dict(cls, data):
