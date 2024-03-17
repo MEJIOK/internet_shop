@@ -35,6 +35,14 @@ class Category:
             products_info += f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
         return products_info
 
+    def __len__(self):
+        """Return the total number of products in the category."""
+        return len(self._products)
+
+    def __str__(self):
+        """Return a string representation of the category."""
+        return f"{self.name}, количество продуктов: {len(self._products)} шт."
+
 
 class Product:
     """Class representing a product."""
@@ -46,6 +54,10 @@ class Product:
         self._price = price
         self.quantity = quantity
         Category.total_unique_products += 1
+
+    def __str__(self):
+        """Return a string representation of the product."""
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     @property
     def price(self):
@@ -84,3 +96,33 @@ class Product:
 
         # Если товар с таким именем не найден, создаем новый товар
         return cls(name, description, price, quantity)
+
+    def __add__(self, other):
+        """Add two Product objects together considering quantity."""
+        if isinstance(other, Product) and self.name == other.name and self.description == other.description:
+            total_price_self = self.price * self.quantity
+            total_price_other = other.price * other.quantity
+            total_quantity = self.quantity + other.quantity
+            total_price = (total_price_self + total_price_other) / total_quantity
+            return Product(self.name, self.description, total_price, total_quantity)
+        else:
+            raise ValueError("Нельзя складывать различные товары или товары с разными названиями/описаниями.")
+
+
+class CategoryIterator:
+    """Iterator for iterating over products in a category."""
+
+    def __init__(self, category):
+        self._category = category
+        self._index = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._index < len(self._category.get_products()):
+            product = self._category.get_products()[self._index]
+            self._index += 1
+            return product
+        else:
+            raise StopIteration
