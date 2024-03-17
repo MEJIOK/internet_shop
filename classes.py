@@ -35,6 +35,14 @@ class Category:
             products_info += f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
         return products_info
 
+    def __len__(self):
+        """Return the total number of products in the category."""
+        return len(self._products)
+
+    def __str__(self):
+        """Return a string representation of the category."""
+        return f"{self.name}, количество продуктов: {len(self._products)} шт."
+
 
 class Product:
     """Class representing a product."""
@@ -46,6 +54,10 @@ class Product:
         self._price = price
         self.quantity = quantity
         Category.total_unique_products += 1
+
+    def __str__(self):
+        """Return a string representation of the product."""
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     @property
     def price(self):
