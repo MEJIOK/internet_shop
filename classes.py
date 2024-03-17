@@ -27,9 +27,18 @@ class Category:
         """Get the list of products in the category."""
         return self._products
 
+    @property
+    def products_info(self):
+        """Get the information about products in the category."""
+        products_info = ""
+        for product in self._products:
+            products_info += f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
+        return products_info
+
 
 class Product:
     """Class representing a product."""
+
     def __init__(self, name, description, price, quantity):
         """Initialize a Product object with name, description, price, and quantity."""
         self.name = name
