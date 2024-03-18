@@ -1,5 +1,5 @@
 import json
-from classes import Product, Category
+from src.category import Category
 
 
 def load_data_from_json(file_path):
@@ -14,3 +14,7 @@ def load_data_from_json(file_path):
         categories.append(category)
 
     return categories
+
+
+class Product:
+    pass

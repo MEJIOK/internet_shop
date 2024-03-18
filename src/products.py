@@ -1,51 +1,3 @@
-class Category:
-    """Class representing a category of products."""
-    total_categories = 0
-    # total_unique_products = 0
-
-    def __init__(self, name, description, products=None):
-        """Initialize a Category object with name, description, and products."""
-        self.name = name
-        self.description = description
-        self.__products = products if products is not None else []  # Приватный атрибут для хранения товаров
-        Category.total_categories += 1
-        self.total_unique_products = len(self.__products)
-
-    @classmethod
-    def from_dict(cls, data):
-        """Create a Category object from a dictionary."""
-        _category = cls(data['name'], data['description'])
-        for product_data in data.get('products', []):
-            product = Product.create_product(**product_data)
-            _category.add_product(product)  # Используем метод добавления продукта
-        return _category
-
-    def add_product(self, product):
-        """Add a product to the category."""
-        self.__products.append(product)  # Добавляем продукт в список товаров категории
-        self.total_unique_products += 1
-
-    def products(self):
-        """Get the list of products in the category."""
-        return self.__products
-
-    @property
-    def products_info(self):
-        """Get the information about products in the category."""
-        products_info = ""
-        for product in self.__products:
-            products_info += f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
-        return products_info
-
-    def __len__(self):
-        """Return the total number of products in the category."""
-        return len(self.__products)
-
-    def __str__(self):
-        """Return a string representation of the category."""
-        return f"{self.name}, количество продуктов: {len(self.__products)} шт."
-
-
 class Product:
     """Class representing a product."""
 
@@ -58,7 +10,7 @@ class Product:
 
     def __str__(self):
         """Return a string representation of the product."""
-        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+        return f"{self.name}, {self._price} руб. Остаток: {self.quantity} шт."
 
     @property
     def price(self):
@@ -104,13 +56,12 @@ class Product:
         return cls(name, description, price, quantity)
 
     def __add__(self, other):
-        """Add two Product objects together considering quantity."""
+        """Return the total price of two products considering their quantities."""
         if isinstance(other, Product) and self.name == other.name and self.description == other.description:
             total_price_self = self.price * self.quantity
             total_price_other = other.price * other.quantity
-            total_quantity = self.quantity + other.quantity
-            total_price = (total_price_self + total_price_other) / total_quantity
-            return Product(self.name, self.description, total_price, total_quantity)
+            total_price = total_price_self + total_price_other
+            return total_price
         else:
             raise ValueError("Нельзя складывать различные товары или товары с разными названиями/описаниями.")
 
