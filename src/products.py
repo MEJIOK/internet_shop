@@ -57,13 +57,13 @@ class Product:
 
     def __add__(self, other):
         """Return the total price of two products considering their quantities."""
-        if isinstance(other, Product) and self.name == other.name and self.description == other.description:
+        if isinstance(other, Product):
             total_price_self = self.price * self.quantity
             total_price_other = other.price * other.quantity
             total_price = total_price_self + total_price_other
             return total_price
         else:
-            raise ValueError("Нельзя складывать различные товары или товары с разными названиями/описаниями.")
+            raise ValueError("Нельзя складывать продукты с объектами других классов.")
 
 
 class CategoryIterator:

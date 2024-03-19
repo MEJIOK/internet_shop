@@ -4,7 +4,7 @@ from src.products import Product
 class Category:
     """Class representing a category of products."""
     total_categories = 0
-    # total_unique_products = 0
+    total_unique_products = 0
 
     def __init__(self, name, description, products=None):
         """Initialize a Category object with name, description, and products."""
@@ -12,7 +12,7 @@ class Category:
         self.description = description
         self.__products = products if products is not None else []  # Приватный атрибут для хранения товаров
         Category.total_categories += 1
-        self.total_unique_products = len(self.__products)
+        Category.total_unique_products += len(self.__products)
 
     @classmethod
     def from_dict(cls, data):
@@ -42,7 +42,10 @@ class Category:
 
     def __len__(self):
         """Return the total number of products in the category."""
-        return len(self.__products)
+        total_quantity = 0
+        for product in self.__products:
+            total_quantity += product.quantity
+        return total_quantity
 
     def __str__(self):
         """Return a string representation of the category."""
