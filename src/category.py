@@ -50,4 +50,3 @@ class Category:
     def __str__(self):
         """Return a string representation of the category."""
         return f"{self.name}, количество продуктов: {len(self.__products)} шт., общее количество: {len(self)} шт."
-
