@@ -61,13 +61,13 @@ class Product:
 
     def __add__(self, other) -> float:
         """Return the total price of two products considering their quantities."""
-        if isinstance(other, Product):
+        if isinstance(other, Product) and type(self) is type(other):
             total_price_self = self.price * self.quantity
             total_price_other = other.price * other.quantity
             total_price = total_price_self + total_price_other
             return total_price
         else:
-            raise ValueError("Нельзя складывать продукты с объектами других классов.")
+            raise TypeError("Нельзя складывать продукты разных типов или объекты других классов.")
 
 
 class CategoryIterator:
@@ -91,6 +91,7 @@ class CategoryIterator:
 
 class Smartphone(Product):
     """Class representing a smartphone."""
+
     def __init__(self, name: str, description: str, price: float, quantity: int, color: str,
                  performance: str, model: str, memory: str):
         """Initialize a Smartphone object with additional attributes."""
@@ -102,6 +103,7 @@ class Smartphone(Product):
 
 class Grass(Product):
     """Class representing lawn grass."""
+
     def __init__(self, name: str, description: str, price: float, quantity: int, color: str,
                  country_of_origin: str, germination_period: str):
         """Initialize a LawnGrass object with additional attributes."""
