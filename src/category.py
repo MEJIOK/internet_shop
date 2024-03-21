@@ -6,16 +6,17 @@ class Category:
     total_categories = 0
     total_unique_products = 0
 
-    def __init__(self, name, description, products=None):
+    def __init__(self, name: str, description: str, products=None, allowed_types=None) -> None:
         """Initialize a Category object with name, description, and products."""
+        self.allowed_types = allowed_types
         self.name = name
         self.description = description
         self.__products = products if products is not None else []  # Приватный атрибут для хранения товаров
         Category.total_categories += 1
-        Category.total_unique_products += len(self.__products)
+        Category.total_unique_products += len(set(self.__products))
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data: dict):
         """Create a Category object from a dictionary."""
         _category = cls(data['name'], data['description'])
         for product_data in data.get('products', []):
@@ -23,9 +24,11 @@ class Category:
             _category.add_product(product)  # Используем метод добавления продукта
         return _category
 
-    def add_product(self, product):
+    def add_product(self, product: Product) -> None:
         """Add a product to the category."""
-        self.__products.append(product)  # Добавляем продукт в список товаров категории
+        if not isinstance(product, self.allowed_types):
+            raise TypeError(f"Можно добавлять только продукты следующих типов: {self.allowed_types}")
+        self.__products.append(product)
         self.total_unique_products += 1
 
     def products(self):
@@ -33,7 +36,7 @@ class Category:
         return self.__products
 
     @property
-    def products_info(self):
+    def products_info(self) -> str:
         """Get the information about products in the category."""
         products_info = ""
         for product in self.__products:
@@ -50,4 +53,3 @@ class Category:
     def __str__(self):
         """Return a string representation of the category."""
         return f"{self.name}, количество продуктов: {len(self.__products)} шт., общее количество: {len(self)} шт."
-
