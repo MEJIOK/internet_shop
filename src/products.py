@@ -1,24 +1,27 @@
+from typing import Any
+
+
 class Product:
     """Class representing a product."""
 
-    def __init__(self, name, description, price, quantity):
+    def __init__(self, name: str, description: str, price: float, quantity: int):
         """Initialize a Product object with name, description, price, and quantity."""
         self.name = name
         self.description = description
         self._price = price
         self.quantity = quantity
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return a string representation of the product."""
         return f"{self.name}, {self._price} руб. Остаток: {self.quantity} шт."
 
     @property
-    def price(self):
+    def price(self) -> float:
         """Getter for the price attribute."""
         return self._price
 
     @price.setter
-    def price(self, value):
+    def price(self, value) -> None:
         """Setter for the price attribute."""
         if value <= 0:
             print("Ошибка: цена введена некорректно.")
@@ -33,17 +36,17 @@ class Product:
             self._price = value
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data: dict):
         """Create a Product object from a dictionary."""
         return cls(data['name'], data['description'], data['price'], data['quantity'])
 
     @classmethod
-    def create(cls, **kwargs):
+    def create(cls, **kwargs: Any):
         """Create a new product using kwargs."""
         return cls(**kwargs)
 
     @classmethod
-    def create_product(cls, name, description, price, quantity, products_list):
+    def create_product(cls, name: str, description: str, price: float, quantity: int, products_list):
         """Create a new product or update existing one and return it."""
         for product in products_list:
             if product.name == name:
@@ -55,7 +58,7 @@ class Product:
         # Если товар с таким именем не найден, создаем новый товар
         return cls(name, description, price, quantity)
 
-    def __add__(self, other):
+    def __add__(self, other) -> float:
         """Return the total price of two products considering their quantities."""
         if isinstance(other, Product):
             total_price_self = self.price * self.quantity
