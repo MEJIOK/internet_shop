@@ -6,8 +6,9 @@ class Category:
     total_categories = 0
     total_unique_products = 0
 
-    def __init__(self, name: str, description: str, products=None) -> None:
+    def __init__(self, name: str, description: str, products=None, allowed_types=None) -> None:
         """Initialize a Category object with name, description, and products."""
+        self.allowed_types = allowed_types
         self.name = name
         self.description = description
         self.__products = products if products is not None else []  # Приватный атрибут для хранения товаров
@@ -25,7 +26,9 @@ class Category:
 
     def add_product(self, product: Product) -> None:
         """Add a product to the category."""
-        self.__products.append(product)  # Добавляем продукт в список товаров категории
+        if not isinstance(product, self.allowed_types):
+            raise TypeError(f"Можно добавлять только продукты следующих типов: {self.allowed_types}")
+        self.__products.append(product)
         self.total_unique_products += 1
 
     def products(self):
