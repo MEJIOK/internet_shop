@@ -1,11 +1,27 @@
 from typing import Any
+from abc import ABC, abstractmethod
 
 
-class Product:
-    """Class representing a product."""
+class CreationInfoMixin:
+    """Mixin for printing information about created objects."""
+    def __repr__(self):
+        """Return a string representation of the object."""
+        class_name = self.__class__.__name__
+        attributes = ', '.join(f"{key}={value}" for key, value in self.__dict__.items())
+        return f"{class_name}({attributes})"
 
+    def __init__(self, *args, **kwargs):
+        """Initialize the object and print its attributes."""
+        print(f"Object of class {self.__class__.__name__} has been created:")
+        for key, value in kwargs.items():
+            print(f"{key}: {value}")
+        super().__init__(*args, **kwargs)
+
+
+class AbstractProduct(ABC):
+    """Abstract base class for products."""
     def __init__(self, name: str, description: str, price: float, quantity: int, color: str):
-        """Initialize a Product object with name, description, price, and quantity."""
+        super().__init__()
         self.name = name
         self.description = description
         self._price = price
@@ -36,6 +52,11 @@ class Product:
         else:
             self._price = value
 
+    @abstractmethod
+    def additional_info(self) -> str:
+        """Abstract method to return additional information about the product."""
+        pass
+
     @classmethod
     def from_dict(cls, data: dict):
         """Create a Product object from a dictionary."""
@@ -61,7 +82,7 @@ class Product:
 
     def __add__(self, other) -> float:
         """Return the total price of two products considering their quantities."""
-        if isinstance(other, Product) and type(self) is type(other):
+        if isinstance(other, type(self)):
             total_price_self = self.price * self.quantity
             total_price_other = other.price * other.quantity
             total_price = total_price_self + total_price_other
@@ -70,43 +91,44 @@ class Product:
             raise TypeError("Нельзя складывать продукты разных типов или объекты других классов.")
 
 
-class CategoryIterator:
-    """Iterator for iterating over products in a category."""
-
-    def __init__(self, category):
-        self._category = category
-        self._index = 0
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self._index < len(self._category.get_products()):
-            product = self._category.get_products()[self._index]
-            self._index += 1
-            return product
-        else:
-            raise StopIteration
+class Product(AbstractProduct):
+    """Class representing a product."""
+    def additional_info(self) -> str:
+        return ""  # Получается, что нет особых аттрибутов (свойств) обычного продукта?
 
 
-class Smartphone(Product):
+class Smartphone(AbstractProduct):
     """Class representing a smartphone."""
 
     def __init__(self, name: str, description: str, price: float, quantity: int, color: str,
                  performance: str, model: str, memory: str):
-        """Initialize a Smartphone object with additional attributes."""
-        super().__init__(name, description, price, quantity, color)
+        super().__init__(name, description, price, quantity, color)  # Используем инициализатор родительского класса
         self.performance = performance
         self.model = model
         self.memory = memory
 
+    def additional_info(self) -> str:
+        return f"Performance: {self.performance}, Model: {self.model}, Memory: {self.memory}"
 
-class Grass(Product):
+
+class Grass(AbstractProduct):
     """Class representing lawn grass."""
-
     def __init__(self, name: str, description: str, price: float, quantity: int, color: str,
                  country_of_origin: str, germination_period: str):
-        """Initialize a LawnGrass object with additional attributes."""
         super().__init__(name, description, price, quantity, color)
         self.country_of_origin = country_of_origin
         self.germination_period = germination_period
+
+    def additional_info(self) -> str:
+        return f"Country of Origin: {self.country_of_origin}, Germination Period: {self.germination_period}"
+
+
+if __name__ == "__main__":
+    # Пример использования
+    smartphone = Smartphone("iPhone", "Apple smartphone", 1299.99, 8,
+                            "silver", "High", "iPhone 12", "256GB")
+    print(smartphone.additional_info())
+
+    grass = Grass("Green Grass", "Lawn grass for garden", 5.99, 100,
+                  "green", "USA", "2 weeks")
+    print(grass.additional_info())
