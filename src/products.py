@@ -2,9 +2,26 @@ from typing import Any
 from abc import ABC, abstractmethod
 
 
+class CreationInfoMixin:
+    """Mixin for printing information about created objects."""
+    def __repr__(self):
+        """Return a string representation of the object."""
+        class_name = self.__class__.__name__
+        attributes = ', '.join(f"{key}={value}" for key, value in self.__dict__.items())
+        return f"{class_name}({attributes})"
+
+    def __init__(self, *args, **kwargs):
+        """Initialize the object and print its attributes."""
+        print(f"Object of class {self.__class__.__name__} has been created:")
+        for key, value in kwargs.items():
+            print(f"{key}: {value}")
+        super().__init__(*args, **kwargs)
+
+
 class AbstractProduct(ABC):
     """Abstract base class for products."""
     def __init__(self, name: str, description: str, price: float, quantity: int, color: str):
+        super().__init__()
         self.name = name
         self.description = description
         self._price = price
@@ -65,7 +82,7 @@ class AbstractProduct(ABC):
 
     def __add__(self, other) -> float:
         """Return the total price of two products considering their quantities."""
-        if type(self) is type(other) or issubclass(type(self), type(other)) or issubclass(type(other), type(self)):
+        if isinstance(other, type(self)):
             total_price_self = self.price * self.quantity
             total_price_other = other.price * other.quantity
             total_price = total_price_self + total_price_other
@@ -78,25 +95,6 @@ class Product(AbstractProduct):
     """Class representing a product."""
     def additional_info(self) -> str:
         return ""  # Получается, что нет особых аттрибутов (свойств) обычного продукта?
-
-
-class CategoryIterator:
-    """Iterator for iterating over products in a category."""
-# Может быть этот класс нужно убрать в файл с категориями?
-    def __init__(self, category):
-        self._category = category
-        self._index = 0
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self._index < len(self._category.get_products()):
-            product = self._category.get_products()[self._index]
-            self._index += 1
-            return product
-        else:
-            raise StopIteration
 
 
 class Smartphone(AbstractProduct):
