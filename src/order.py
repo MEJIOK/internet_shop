@@ -7,7 +7,8 @@ class AbstractOrder(ABC):
     @abstractmethod
     def __init__(self, product: Product, quantity: int) -> None:
         """Initialize an Order object with a product and quantity."""
-        pass
+        self.quantity = quantity
+        self.product = product
 
     @abstractmethod
     def total_cost(self) -> float:
@@ -26,6 +27,7 @@ class Order(AbstractOrder):
 
     def __init__(self, product: Product, quantity: int) -> None:
         """Initialize an Order object with a product and quantity."""
+        super().__init__(product, quantity)
         self.product = product
         self.quantity = quantity
         Order.total_orders += 1

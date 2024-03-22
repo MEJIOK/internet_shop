@@ -28,6 +28,7 @@ class Category(AbstractCategory):
 
     def __init__(self, name: str, description: str, products=None, allowed_types=None) -> None:
         """Initialize a Category object with name, description, and products."""
+        super().__init__()
         self.allowed_types = allowed_types
         self.name = name
         self.description = description
