@@ -1,7 +1,27 @@
 from src.products import Product
+from abc import ABC, abstractmethod
 
 
-class Category:
+class AbstractCategory(ABC):
+    """Abstract base class for categories."""
+
+    @abstractmethod
+    def add_product(self, product: Product) -> None:
+        """Add a product to the category."""
+        pass
+
+    @abstractmethod
+    def products(self):
+        """Get the list of products in the category."""
+        pass
+
+    @abstractmethod
+    def __len__(self):
+        """Return the total number of products in the category."""
+        pass
+
+
+class Category(AbstractCategory):
     """Class representing a category of products."""
     total_categories = 0
     total_unique_products = 0
