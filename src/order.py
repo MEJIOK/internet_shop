@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.products import Product
+from src.products import Product, CreationInfoMixin
 
 
 class AbstractOrder(ABC):
@@ -21,7 +21,7 @@ class AbstractOrder(ABC):
         pass
 
 
-class Order(AbstractOrder):
+class Order(AbstractOrder, CreationInfoMixin):
     """Class representing an order for a product."""
     total_orders = 0
 

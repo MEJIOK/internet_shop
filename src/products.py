@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 
 class CreationInfoMixin:
     """Mixin for printing information about created objects."""
+
     def __repr__(self):
         """Return a string representation of the object."""
         class_name = self.__class__.__name__
@@ -20,6 +21,15 @@ class CreationInfoMixin:
 
 class AbstractProduct(ABC):
     """Abstract base class for products."""
+
+    @abstractmethod
+    def additional_info(self) -> str:
+        """Abstract method to return additional information about the product."""
+        pass
+
+
+class Product(AbstractProduct, CreationInfoMixin):
+    """Class representing a product."""
     def __init__(self, name: str, description: str, price: float, quantity: int, color: str):
         super().__init__()
         self.name = name
@@ -52,7 +62,6 @@ class AbstractProduct(ABC):
         else:
             self._price = value
 
-    @abstractmethod
     def additional_info(self) -> str:
         """Abstract method to return additional information about the product."""
         pass
@@ -91,15 +100,8 @@ class AbstractProduct(ABC):
             raise TypeError("Нельзя складывать продукты разных типов или объекты других классов.")
 
 
-class Product(AbstractProduct):
-    """Class representing a product."""
-    def additional_info(self) -> str:
-        return ""  # Получается, что нет особых аттрибутов (свойств) обычного продукта?
-
-
-class Smartphone(AbstractProduct):
+class Smartphone(Product):
     """Class representing a smartphone."""
-
     def __init__(self, name: str, description: str, price: float, quantity: int, color: str,
                  performance: str, model: str, memory: str):
         super().__init__(name, description, price, quantity, color)  # Используем инициализатор родительского класса
@@ -111,7 +113,7 @@ class Smartphone(AbstractProduct):
         return f"Performance: {self.performance}, Model: {self.model}, Memory: {self.memory}"
 
 
-class Grass(AbstractProduct):
+class Grass(Product):
     """Class representing lawn grass."""
     def __init__(self, name: str, description: str, price: float, quantity: int, color: str,
                  country_of_origin: str, germination_period: str):
