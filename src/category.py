@@ -47,6 +47,8 @@ class Category(AbstractCategory):
 
     def add_product(self, product: Product) -> None:
         """Add a product to the category."""
+        if product.quantity == 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен.")
         if not isinstance(product, self.allowed_types):
             raise TypeError(f"Можно добавлять только продукты следующих типов: {self.allowed_types}")
         self.__products.append(product)
