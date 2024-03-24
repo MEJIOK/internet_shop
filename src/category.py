@@ -77,6 +77,16 @@ class Category(AbstractCategory):
         """Return a string representation of the category."""
         return f"{self.name}, количество продуктов: {len(self.__products)} шт., общее количество: {len(self)} шт."
 
+    def average_price(self):
+        """Calculate the average price of all products in the category."""
+        try:
+            total_price = sum(product.price for product in self.__products)
+            average_price = total_price / len(self.__products)
+            return average_price
+        except ZeroDivisionError:
+            print("В категории нет товаров.")
+            return 0
+
 
 class CategoryIterator:
     """Iterator for iterating over products in a category."""
