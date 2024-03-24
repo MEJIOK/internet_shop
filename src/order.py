@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+
+from src.category import ZeroQuantityError
 from src.products import Product, CreationInfoMixin
 
 
@@ -27,10 +29,18 @@ class Order(AbstractOrder, CreationInfoMixin):
 
     def __init__(self, product: Product, quantity: int) -> None:
         """Initialize an Order object with a product and quantity."""
-        super().__init__(product, quantity)
-        self.product = product
-        self.quantity = quantity
-        Order.total_orders += 1
+        try:
+            if quantity == 0:
+                raise ZeroQuantityError()
+            super().__init__(product, quantity)
+            self.product = product
+            self.quantity = quantity
+            Order.total_orders += 1
+            print("Товар успешно добавлен.")
+        except ZeroQuantityError as e:
+            print(e)
+        finally:
+            print("Обработка добавления товара завершена.")
 
     def total_cost(self) -> float:
         """Calculate the total cost of the order."""

@@ -47,12 +47,18 @@ class Category(AbstractCategory):
 
     def add_product(self, product: Product) -> None:
         """Add a product to the category."""
-        if product.quantity == 0:
-            raise ValueError("Товар с нулевым количеством не может быть добавлен.")
-        if not isinstance(product, self.allowed_types):
-            raise TypeError(f"Можно добавлять только продукты следующих типов: {self.allowed_types}")
-        self.__products.append(product)
-        self.total_unique_products += 1
+        try:
+            if product.quantity == 0:
+                raise ZeroQuantityError()
+            if not isinstance(product, self.allowed_types):
+                raise TypeError(f"Можно добавлять только продукты следующих типов: {self.allowed_types}")
+            self.__products.append(product)
+            self.total_unique_products += 1
+            print("Товар успешно добавлен.")
+        except ZeroQuantityError as e:
+            print(e)
+        finally:
+            print("Обработка добавления товара завершена.")
 
     def products(self):
         """Get the list of products in the category."""
@@ -90,7 +96,7 @@ class Category(AbstractCategory):
 
 class CategoryIterator:
     """Iterator for iterating over products in a category."""
-# Может быть этот класс нужно убрать в файл с категориями?
+
     def __init__(self, category):
         self._category = category
         self._index = 0
@@ -105,3 +111,11 @@ class CategoryIterator:
             return product
         else:
             raise StopIteration
+
+
+class ZeroQuantityError(Exception):
+    """Exception raised when trying to add a product with zero quantity."""
+
+    def __init__(self, message="Товар с нулевым количеством не может быть добавлен."):
+        self.message = message
+        super().__init__(self.message)
