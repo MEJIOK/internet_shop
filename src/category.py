@@ -49,14 +49,15 @@ class Category(AbstractCategory):
         """Add a product to the category."""
         try:
             if product.quantity == 0:
-                raise ZeroQuantityError()
+                raise ZeroQuantityError("Товар с нулевым количеством не может быть добавлен.")
             if not isinstance(product, self.allowed_types):
                 raise TypeError(f"Можно добавлять только продукты следующих типов: {self.allowed_types}")
+        except (ZeroQuantityError, TypeError) as e:
+            print(f"Ошибка при добавлении товара: {e}")
+        else:
             self.__products.append(product)
             self.total_unique_products += 1
             print("Товар успешно добавлен.")
-        except ZeroQuantityError as e:
-            print(e)
         finally:
             print("Обработка добавления товара завершена.")
 
